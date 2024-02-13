@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2024-02-11 Sun 22:51 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CPSC 471 Homework 1: Accessing the Internet Time Service with UDP and TCP</title>
+<meta name="author" content="Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton" />
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">CPSC 471 Homework 1: Accessing the Internet Time Service with UDP and TCP</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org26b096f">1. Assignment Value, Submission, and Academic Integrity/Intellectual Property Reminders</a></li>
+<li><a href="#org5205bfd">2. Homework Questions</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org26b096f" class="outline-2">
+<h2 id="org26b096f"><span class="section-number-2">1.</span> Assignment Value, Submission, and Academic Integrity/Intellectual Property Reminders</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<b>10 points possible</b>
+</p>
+
+<p>
+<i>Submit via Canvas by 11:59 PM on Wednesday, February 21, 2024.</i>  To receive credit, this assignment and all code <b>must be typed</b>.
+</p>
+
+<p>
+<b>You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.</b>
+</p>
+
+<p>
+You may discuss this assignment with others, but <b>this assignment must be completed individually by you, not AI.  Completing this assignment with a group of students and turning in copies of group work is not permitted.</b>
+</p>
+
+<p>
+Recall that intellectual property infringement and academic dishonesty will not be tolerated.  By submitting this assignment, you understand penalties will be assessed if you submit work for credit that is not your own.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org5205bfd" class="outline-2">
+<h2 id="org5205bfd"><span class="section-number-2">2.</span> Homework Questions</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+<b>Complete the following problems.  For each question, list all sources/websites used and students consulted.</b>
+</p>
+
+<ol class="org-ol">
+<li><p>
+(1.5 points possible) Read <a href="https://www.rfc-editor.org/rfc/rfc868">RFC 868</a>; this describes the Time Protocol.  Explain what server/client behavior is required to receive the time via TCP.  Explain what server/client behavior is required to receive the time via UDP.  Explain what format the time is received by the client.
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+
+<li><p>
+(1.5 points possible) Read <a href="https://www.rfc-editor.org/rfc/rfc867">RFC 867</a>; this describes the Daytime Protocol.  Explain what server/client behavior is required to receive the time via TCP.  Explain what server/client behavior is required to receive the time via UDP.  Explain what format the time is received by the client.
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+
+<li><p>
+(2 points possible) Create a client program with the language of your choice.  Your program must request the current time using <b>TCP</b> and the <b>Daytime Protocol</b> from a <a href="https://tf.nist.gov/tf-cgi/servers.cgi">NIST (National Institute of Standards and Technology) Internet Time Server</a>.
+</p>
+
+<p>
+For your response to this problem, include the following:
+</p>
+
+<p>
+(1) <b>Copy-paste as text all code you wrote for your client program; you will not receive credit for this question if you do not include your code or if you copy-paste your code as an image.</b>
+</p>
+
+<p>
+(2) Provide a screenshot image proving the correct operation of your client program; show (i) the entire command required to run your program, (ii) all input/output for your program, and (iii) the command prompt ready for the next command (this shows that when you exit your program, your program does not hang).
+</p>
+
+<p>
+(3) <b>Lastly, indicate if your client works correctly; you will not receive credit for this question if you omit this.</b>  If it works correctly, then explain how you know it works correctly.  If it does not work correctly, then describe (i) what is wrong, (ii) where the issue(s) are located in your code, and (iii) how you know this.
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+
+<li><p>
+(2 points possible) Repeat question 3, but create a client program which requests the current time using <b>UDP</b> and the <b>Daytime Protocol</b> from a NIST Internet Time Server.  Make sure that you include (1) all code you wrote for your program, (2) a screenshot which proves the correct operation of your program, and (3) an explanation of why, or why not, your program works correctly.  <b>Carefully follow the instructions for your response to question 3 to complete this question.</b>
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+
+<li><p>
+(1 point possible) Your client programs for questions 3 and 4 are likely very similar.  Explain the differences between them when using <b>TCP</b> and <b>UDP</b> to request the current time using the Daytime Protocol.
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+
+<li><p>
+(1 point possible) Explain how must you change your client programs if you wish to use the <b>Time Protocol</b> instead of the Daytime Protocol.
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+
+<li><p>
+(1 point possible) The Network Time Protocol (NTP) is more complex; see <a href="https://datatracker.ietf.org/doc/html/rfc5905">RFC 5909</a> for more information.  Instead, examine the Simple Network Time Protocol (SNTP); I personally think <a href="https://datatracker.ietf.org/doc/html/rfc4330">RFC 4330</a> more clearly describes this than RFC 5909.  At a minimum, examine NTP's timestamp format, SNTP's message format, and SNTP client operations.  Explain how you must change your client programs if you wish to use <b>SNTP</b> instead of the Daytime Protocol.
+</p>
+
+<p>
+You may not distribute/post this assignment without written permission from Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton.
+</p></li>
+</ol>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Dr. Mike Turi, Electrical and Computer Engineering Department, California State University, Fullerton</p>
+<p class="date">Created: 2024-02-11 Sun 22:51</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
